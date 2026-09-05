@@ -3,7 +3,7 @@
 - Read `docs/game-spec.md`, `CONTEXT.md` and `docs/adr/0001-versioned-area-rules.md`.
 - Keep the engine pure and immutable. Games never import from `platform/`.
 - Use the existing platform `send`/`subscribe` transport; validate every incoming
-  action and derive its color from the authenticated account's claimed seat.
+  action and derive its color from the table participant's claimed seat.
 - Keep game CSS scoped to `.go-game`, including resets and media rules.
 - Run `npm --prefix go run typecheck`, `npm --prefix go test`, and
   `npm test -- tests/integration/go.test.ts` from the platform checkout. Also

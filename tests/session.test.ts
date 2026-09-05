@@ -53,7 +53,7 @@ describe("Go session", () => {
     session.handleGameMessage(alice, { type: "ACTION", revision: 0, action: { type: "CONFIRM_SCORE" } });
     expect(session.serialize()).toEqual(scoring); expect(snapshot().state.confirmed).toEqual([]);
   });
-  it("reconnects accounts and supports replacement players without resetting play", () => {
+  it("reconnects participants and supports replacement players without resetting play", () => {
     const { session, act, snapshot, messages } = setup();
     act(alice, { type: "PLACE", point: 0 }); session.detachConnection(alice);
     session.attachConnection(alice, m => messages.get(alice)!.push(m as ServerMessage));
@@ -83,7 +83,7 @@ describe("Go session", () => {
     expect(loaded.session.describe().status).toBe("finished");
     current.act(bob, { type: "CONFIRM_SCORE" }); roundTrip();
   });
-  it("returns to the lobby on load and does not persist account data", () => {
+  it("returns to the lobby on load and does not persist participant data", () => {
     const { session } = setup();
     const saved = session.serialize();
     expect(JSON.stringify(saved)).not.toMatch(/alice|bob|Alice|Bob/);

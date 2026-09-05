@@ -43,6 +43,9 @@ export interface GameDefinition<Save = unknown> {
    *  and hands it back unchanged. */
   loadSession(blob: Save, opts: LoadOpts): GameSession<Save>;
 
+  /** Exact participant assignments stored in older saves, when available. */
+  savedParticipants?(blob: Save): readonly { seatIndex: number; userId: UserId; displayName: string }[];
+
   /** Optional. Called by the platform on createTable BEFORE
    *  createSession, with the raw options the user submitted. The game
    *  can fill in defaults (e.g. random seed) and the platform persists
@@ -55,7 +58,7 @@ export interface GameDefinition<Save = unknown> {
  *  it receives from clients. */
 export interface GameSession<Save = unknown> {
   // --- Connection lifecycle ----------------------------------------------
-  /** A logged-in user opened a socket addressed to this table.
+  /** A table participant opened a socket addressed to this table.
    *  The session should respond by sending the user a fresh
    *  per-recipient snapshot. `send` is durable for the life of the
    *  connection; on disconnect the platform calls detachConnection. */
@@ -95,6 +98,8 @@ export interface GameSession<Save = unknown> {
 // ---------------------------------------------------------------------------
 
 export interface CreateOpts {
+  /** Stable table family for auxiliary participant-owned data. */
+  readonly scopeId?: string;
   readonly tableId: TableId;
   readonly hostUserId: UserId;
   readonly options: Record<string, unknown>;

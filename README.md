@@ -38,8 +38,8 @@ server. Its React entry accepts the transport-neutral `PlatformGameContext`
 (`send`/`subscribe`); another host can provide that same interface.
 
 - `engine/`: pure immutable rules, groups, area scoring and coordinates.
-- `server/GoSession.ts`: seats, account ownership, protocol validation, snapshots
-  and versioned replay saves. Account identities never enter the rules engine.
+- `server/GoSession.ts`: seats, participant ownership, protocol validation, snapshots
+  and versioned replay saves. Participant identities never enter the rules engine.
 - `shared/protocol.ts`: action and public-view contract. Revisions prevent stale
   moves and confirmations from accepting a newer proposal accidentally.
 - `web/`: responsive SVG board, external-store subscription and action panel.

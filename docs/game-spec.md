@@ -4,7 +4,7 @@
 
 Rules are deterministic and independent of presentation and transport. Players
 request actions; the authoritative game validates them. All game information is
-public. Accounts, table membership, spectators and saves belong to the host platform.
+public. Table access, membership, spectators and saves belong to the host platform.
 
 ## 2. Entities
 
@@ -102,7 +102,7 @@ Connections never define player identity. Only a seated player may act as that
 seat's color. Spectators can see the public position but cannot change it.
 Released or kicked seats can be reclaimed without resetting the position.
 Saving and reloading preserves play, proposals, confirmations and ko history.
-Loaded saves start in a lobby so accounts can reclaim seats before resuming.
+Loaded saves start in a lobby so participants can reclaim seats before resuming.
 
 ## 9. Configuration
 

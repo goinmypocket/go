@@ -1,6 +1,6 @@
 // =============================================================================
 // Platform-level wire protocol. The C2S / S2C envelopes that travel
-// between a logged-in browser and the platform server. Game-specific
+// between a browser holding table capabilities and the platform server. Game-specific
 // payloads ride inside GAME_MSG / GAME_MSG_OUT and are opaque to the
 // platform.
 //
@@ -11,15 +11,13 @@
 import type { OptionsSchema } from "./GameDefinition";
 import type { GameId, SaveId, TableId, UserId } from "./ids";
 
-export const PLATFORM_PROTOCOL_VERSION = 1;
+export const PLATFORM_PROTOCOL_VERSION = 3;
 
 // ---------------------------------------------------------------------------
 // Client → Server
 // ---------------------------------------------------------------------------
 
-// Auth (signup, login, logout, me) is HTTP-only — see platform/auth/routes.ts.
-// The WS upgrade verifies the JWT cookie set by those endpoints; once the
-// socket opens, the user is already authenticated.
+// HTTP establishes a browser cookie; each command resolves its table grant.
 
 export type ClientMessage =
   // --- Games ---
@@ -29,6 +27,7 @@ export type ClientMessage =
       type: "CREATE_TABLE";
       gameId: GameId;
       name: string;
+      displayName?: string;
       isPrivate: boolean;
       /** Host-controlled per-table toggle. Defaults to the game's
        *  static `supportsSpectators`; the host can opt out for
@@ -39,7 +38,7 @@ export type ClientMessage =
       options: Record<string, unknown>;
     }
   | { type: "LIST_TABLES"; filter?: TableFilter }
-  | { type: "OPEN_TABLE"; tableId: TableId }
+  | { type: "OPEN_TABLE"; tableId: TableId; displayName?: string }
   | { type: "JOIN_TABLE"; tableId: TableId; seatIndex: number; kind: "player" | "spectator" }
   | { type: "LEAVE_TABLE"; tableId: TableId }
   | { type: "KICK_USER"; tableId: TableId; seatIndex: number }
@@ -67,15 +66,13 @@ export type ClientMessage =
 export type ServerMessage =
   | { type: "HELLO"; protocolVersion: number }
   | { type: "ERROR"; reason: string; cause?: string }
-  // --- Auth (the WS sends ME_OK once after the cookie-derived
-  //          user is identified; further auth state changes happen
-  //          out-of-band and the client must reconnect to refresh) ---
-  | { type: "ME_OK"; user: UserSummary | null }
+  // The browser revision changes when a table grant is replaced.
+  | { type: "BROWSER_OK"; browser: { id: string; revision: number } }
   // --- Games ---
   | { type: "GAMES_LIST"; games: readonly GameInfo[] }
   // --- Tables ---
   | { type: "TABLES_LIST"; tables: readonly TableSummary[] }
-  | { type: "TABLE_STATE"; table: TableState }
+  | { type: "TABLE_STATE"; table: TableState; opened?: boolean }
   | { type: "TABLE_CLOSED"; tableId: TableId; reason: string }
   // --- Saves ---
   | { type: "SAVES_LIST"; saves: readonly SaveSummary[] }
@@ -86,17 +83,9 @@ export type ServerMessage =
 // Supporting types
 // ---------------------------------------------------------------------------
 
-export interface UserSummary {
+export interface ParticipantSummary {
   readonly id: UserId;
-  readonly username: string;
-  readonly displayName?: string;
-  /** Only included in private HTTP identity responses. */
-  readonly hasRecovery?: boolean;
-  /** True for users with platform-wide admin role: can mint invites,
-   *  list users, promote/demote others. Read from the DB on every
-   *  privileged request so a CLI demote takes effect immediately.
-   *  Optional for forwards-compat with older deploys. */
-  readonly isAdmin?: boolean;
+  readonly displayName: string;
 }
 
 export interface TableFilter {
@@ -120,6 +109,8 @@ export interface TableSummary {
 
 export interface TableState {
   readonly id: TableId;
+  readonly scopeId: string;
+  readonly viewer: ParticipantSummary | null;
   readonly gameId: GameId;
   readonly name: string;
   readonly hostUserId: UserId;
@@ -145,7 +136,7 @@ export interface TableState {
 export interface TableSlot {
   readonly seatIndex: number;
   readonly kind: "player" | "spectator";
-  readonly claimedBy: UserSummary | null;
+  readonly claimedBy: ParticipantSummary | null;
   readonly displayName?: string;
 }
 
@@ -160,6 +151,7 @@ export interface GameInfo {
 
 export interface SaveSummary {
   readonly id: SaveId;
+  readonly scopeId: string;
   readonly gameId: GameId;
   readonly name: string;
   readonly createdAt: number;

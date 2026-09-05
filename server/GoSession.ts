@@ -10,7 +10,7 @@ export interface GoSave {
   readonly intents: readonly Intent[];
 }
 
-/** A table adapter. Only this class associates account identities with colors. */
+/** A table adapter. Only this class associates participant identities with colors. */
 export class GoSession implements GameSession<GoSave> {
   private readonly hostUserId: UserId;
   private readonly options: GoOptions;

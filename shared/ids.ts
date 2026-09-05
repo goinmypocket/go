@@ -8,7 +8,7 @@
 declare const __brand: unique symbol;
 type Brand<T, B extends string> = T & { readonly [__brand]: B };
 
-/** A long-lived account id. The session identifies users by this; the
+/** An opaque table-scoped participant id. The session identifies users by this; the
  *  socket / clientId is ephemeral. */
 export type UserId = Brand<string, "UserId">;
 
