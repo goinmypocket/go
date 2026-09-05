@@ -1,0 +1,71 @@
+.go-game {
+  color-scheme: light;
+  --go-text: #202724;
+  --go-muted: #565e5a;
+  --go-green: #23594b;
+  --go-border: #86918b;
+  --go-content-width: min(1120px, calc(100dvh + 140px));
+  background: #f4f5f7;
+  color: var(--go-text);
+  font: 16px/1.5 system-ui, -apple-system, sans-serif;
+  padding: clamp(16px, 3vw, 40px);
+  min-height: calc(100vh - 56px);
+}
+.go-game *, .go-game *::before, .go-game *::after { box-sizing: border-box; }
+.go-game .go-heading, .go-game .go-layout { max-width: var(--go-content-width); margin-inline: auto; }
+.go-game .go-heading { margin-bottom: 20px; }
+.go-game h1 { font-size: 36px; line-height: 1.2; margin: 0 0 8px; font-weight: 650; }
+.go-game h2 { font-size: 21px; line-height: 1.3; margin: 0 0 6px; }
+.go-game p { margin: 0 0 14px; }
+.go-game .go-heading p, .go-game .go-hint, .go-game .go-last-move, .go-game .go-board-help { color: var(--go-muted); }
+.go-game .go-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 330px); align-items: start; gap: 30px; }
+.go-game .go-board-region { min-width: 0; }
+.go-game .go-board { display: block; width: 100%; height: auto; overflow: visible; touch-action: manipulation; }
+.go-game .go-coordinates { font: 12px system-ui, sans-serif; fill: #303b35; text-anchor: middle; dominant-baseline: middle; }
+.go-game .go-board-help { text-align: center; font-size: 12px; margin: 8px 0; }
+.go-game .go-intersection { outline: none; }
+.go-game .go-intersection--active { cursor: pointer; }
+.go-game .go-board-focus { fill: none; stroke: transparent; stroke-width: 3px; pointer-events: none; }
+.go-game .go-intersection:focus-visible .go-board-focus { stroke: #174d9a; }
+.go-game .go-sidebar { background: #fff; border: 1px solid #c7ccc9; border-radius: 8px; padding: 22px; min-width: 0; margin-top: 17px; }
+.go-game .go-player { display: flex; align-items: center; gap: 12px; padding: 0 0 18px; margin-bottom: 18px; border-bottom: 1px solid #d5dad7; }
+.go-game .go-player-name { display: flex; flex-direction: column; min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.go-game .go-player-name strong { font-size: 18px; }
+.go-game .go-player-name span, .go-game .go-player-name small, .go-game .go-captures { font-size: 12px; color: var(--go-muted); }
+.go-game .go-captures { white-space: nowrap; }
+.go-game .go-stone { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; }
+.go-game .go-stone--black { background: radial-gradient(circle at 30% 25%, #555b59, #252b29 55%, #111614); border: 1px solid #111614; }
+.go-game .go-stone--white { background: radial-gradient(circle at 30% 25%, #fff, #f5f4ed 55%, #d6d5cb); border: 1px solid #a9a89e; }
+.go-game .go-status p { font-size: 14px; margin-bottom: 6px; }
+.go-game .go-status { margin-bottom: 18px; }
+.go-game button { width: 100%; min-height: 44px; padding: 9px 12px; margin: 0 0 10px; font: inherit; border: 1px solid var(--go-border); border-radius: 5px; background: #fff; color: var(--go-green); cursor: pointer; }
+.go-game button:hover:not(:disabled) { background: #edf3ef; }
+.go-game button.go-primary { background: var(--go-green); border-color: var(--go-green); color: #fff; font-weight: 600; }
+.go-game button.go-primary:hover:not(:disabled) { background: #183e34; }
+.go-game button:disabled { color: #616963; background: #e5e9e6; border-color: #a9b0ab; cursor: not-allowed; }
+.go-game :where(button, summary):focus-visible { outline: 3px solid #2459b8; outline-offset: 3px; }
+.go-game .go-hint { font-size: 13px; }
+.go-game .go-score { margin-bottom: 16px; font-size: 14px; }
+.go-game .go-score table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.go-game .go-score caption { text-align: left; font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+.go-game .go-score th { font-weight: 500; text-align: left; }
+.go-game .go-score td { text-align: right; font-variant-numeric: tabular-nums; }
+.go-game .go-score th, .go-game .go-score td { padding: 5px 0; }
+.go-game .go-score thead th:not(:first-child) { text-align: right; }
+.go-game .go-total { border-top: 1px solid #c7ccc9; font-weight: 700; }
+.go-game .go-error { display: flex; align-items: center; gap: 8px; padding: 10px; margin-bottom: 14px; background: #fff0eb; color: #852719; border: 1px solid #b65d49; border-radius: 5px; font-size: 14px; }
+.go-game .go-error button { flex-shrink: 0; width: 36px; min-height: 36px; margin: 0; color: #852719; }
+.go-game .go-resign-confirm { border-block: 1px solid #c7ccc9; padding: 12px 0 4px; margin: 12px 0; }
+.go-game button.go-danger { background: #8f3028; color: #fff; border-color: #8f3028; }
+.go-game button.go-danger:hover:not(:disabled) { background: #70251f; }
+.go-game .go-rules { border-top: 1px solid #d5dad7; padding-top: 16px; margin-top: 18px; font-size: 14px; }
+.go-game .go-rules summary { cursor: pointer; font-size: 16px; font-weight: 600; }
+.go-game .go-rules p { margin: 12px 0 0; }
+@media (max-width: 760px) {
+  .go-game { padding: 16px 12px 28px; }
+  .go-game .go-layout { grid-template-columns: minmax(0, 1fr); gap: 12px; max-width: 620px; }
+  .go-game .go-heading { max-width: 620px; margin-bottom: 12px; }
+  .go-game h1 { font-size: 28px; }
+  .go-game .go-sidebar { margin-top: 0; padding: 18px; }
+  .go-game .go-heading p { font-size: 14px; }
+}
