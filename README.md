@@ -12,6 +12,13 @@ superko. After two passes, either player can mark dead groups; both must confirm
 the same score. Resume play to resolve disagreements. Resignation requires a
 confirmation. Spectators, reconnects and saves use the platform's existing controls.
 
+Go is integrated with the platform's guest access. Open a shared `/table/<id>`
+invitation without logging in and claim an open seat. Returning in the same
+browser preserves the seat. **Player & recovery** creates a private recovery
+link for restoring the same player, color, seats, saves and host ownership in
+another browser. Share the table invitation with opponents; keep the recovery
+link private.
+
 ## Development
 
 From the populated platform repository:
